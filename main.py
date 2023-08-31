@@ -39,17 +39,44 @@ while True:
     Backgroundimg[44:44+633,808:808+414] = cv2_imread_modes[1]#Replaces a specifc region of backgroundimg with the mode which has a heigh of 633 and wdth of 414 pixels
     #cv2.imshow("webcam",img)#displays the img captured previously on an application titled "Face_Attendance_System"
 ########################################################################################################################################
+    #Making a border around any face identified on the webcam
+
+
+
+########################################################################################################################################
     #Checking for matching
     for Encoded_Face in (Encoding_Cur_Frame):#iterates through a list of encoded images and compares them to the current encoded frame
         match_found=face_recognition.compare_faces(encoded_imgs_output,Encoded_Face)#compares the face's encoding in the current frame with a list of known encoded faces
         #print(match_found)  # Prints a list of True or False values. Each value corresponds to an element(image) in the list of known images. 
         #True indicates a match (a person's image is found), while False indicates no match.
 ########################################################################################################################################
+    
     #checking for similarity
-    for  Face in (face_in_cur_frame):#iterates through a list of faces within the captured frame
+    for Face in (face_in_cur_frame):#iterates through a list of faces within the captured frame
         face_difference=face_recognition.face_distance(encoded_imgs_output,Encoded_Face)#calculates the difference(similarity) between the face in the frame and the list of encoded faces
-        print(face_difference)#prints a list of decimal values for each element telling you how similar the captured face in the frame is to each image stored in the images file
+        p=face_difference
+        #print(face_difference)#prints a list of decimal values for each element telling you how similar the captured face in the frame is to each image stored in the images file
         #the lower the value of the decimal the less the difference between the face in the video and the faces in the images folder
+        ########################################################################################################################################
+        # Finding the index of the minimum value in the list
+        min_value = face_difference[0]#setting the first element of the list the minimum value so there's something to compare the next element to
+        match_index = 0#seeting the index to 0 as the min value
+        for i in range(len(face_difference)):#iterates through the elements of the list face_difference
+            if face_difference[i] < min_value:#if the elements value is less than the minimum value of some element stored...
+                min_value = face_difference[i]#the minimum value is the value of the current element
+                match_index = i#the element with the minimum value in the array has its index stored within the variable match_index
+            #print("Index of smallest value", match_index)
+        ########################################################################################################################################
+        if match_found[match_index] == True:
+            print(Ids[match_index])
+        print(match_found)
+        print(match_index)
+
+
+
+
+
+
 ########################################################################################################################################
     cv2.imshow("Face_Attendance_system", Backgroundimg)#displays the background img every frame
     cv2.waitKey(1) # introduce a delay between each displayed frame in OpenCV. with a 1ms dealy
